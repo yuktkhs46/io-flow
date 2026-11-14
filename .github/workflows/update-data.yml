@@ -1,0 +1,30 @@
+name: Update data from e-Stat
+on:
+  schedule:
+    - cron: "17 2 3 * *"   # 毎月3日 11:17 JST
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python pipeline/fetch.py --force
+      - run: python pipeline/build_data.py
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          branch: data/estat-update
+          title: "e-Stat のデータ更新を反映"
+          commit-message: "e-Stat のデータ更新を反映"
+          body: |
+            e-Stat から再取得したファイルの内容が変わりました（正誤情報の反映など）。
+            manifest.lock.json と io.json の差分を確認してからマージしてください。
+          add-paths: |
+            data/raw/manifest.lock.json
+            data/processed/io.json
