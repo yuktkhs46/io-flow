@@ -1,0 +1,5 @@
+# e-Stat の元ファイルは fetch.py で再取得できるのでコミットしない（ハッシュは manifest.lock.json に記録）
+data/raw/*.xlsx
+dist/
+__pycache__/
+node_modules/
