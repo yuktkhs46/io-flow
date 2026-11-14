@@ -1,0 +1,51 @@
+{
+  "_comment": "取得するe-Statファイルの一覧。新しい表が公開されたらここに追記し、fetch.py → build_data.py を実行する。",
+  "download_url": "https://www.e-stat.go.jp/stat-search/file-download?statInfId={statInfId}&fileKind=0",
+  "files": [
+    {
+      "file": "r02_io_13.xlsx", "statInfId": "000040187028", "kind": "io", "level": "13", "unit_scale": 1,
+      "title": "令和2年（2020年）産業連関表 生産者価格評価表 13部門分類",
+      "tables": [{ "year": "2020", "sheet": 0 }]
+    },
+    {
+      "file": "r02_io_37.xlsx", "statInfId": "000040187027", "kind": "io", "level": "37", "unit_scale": 1,
+      "title": "令和2年（2020年）産業連関表 生産者価格評価表 統合大分類（37部門）",
+      "tables": [{ "year": "2020", "sheet": 0 }]
+    },
+    {
+      "file": "r02_io_108.xlsx", "statInfId": "000040187026", "kind": "io", "level": "108", "unit_scale": 1,
+      "title": "令和2年（2020年）産業連関表 生産者価格評価表 統合中分類（108部門）",
+      "tables": [{ "year": "2020", "sheet": 0 }]
+    },
+    {
+      "file": "h17-23-27_io_13.xlsx", "statInfId": "000031974827", "kind": "io", "level": "13", "unit_scale": 0.001,
+      "title": "平成17－23－27年接続産業連関表 生産者価格評価表 13部門分類（名目）",
+      "tables": [
+        { "year": "2005", "sheet": "ひな型平成17年 名目" },
+        { "year": "2011", "sheet": "ひな型平成23年 名目" },
+        { "year": "2015", "sheet": "ひな型平成27年 名目" }
+      ]
+    },
+    {
+      "file": "h17-23-27_io_37.xlsx", "statInfId": "000031974826", "kind": "io", "level": "37", "unit_scale": 0.001,
+      "title": "平成17－23－27年接続産業連関表 生産者価格評価表 統合大分類（37部門）（名目）",
+      "tables": [
+        { "year": "2005", "sheet": "統合大分類平成17年 名目" },
+        { "year": "2011", "sheet": "統合大分類平成23年 名目" },
+        { "year": "2015", "sheet": "統合大分類平成27年 名目" }
+      ]
+    },
+    {
+      "file": "r02_inv_13.xlsx", "statInfId": "000040187039", "kind": "inverse", "level": "13", "year": "2020",
+      "title": "令和2年 逆行列係数表 [I-(I-M)A]^-1 13部門（検証用）"
+    },
+    {
+      "file": "r02_inv_37.xlsx", "statInfId": "000040187038", "kind": "inverse", "level": "37", "year": "2020",
+      "title": "令和2年 逆行列係数表 [I-(I-M)A]^-1 37部門（検証用）"
+    },
+    {
+      "file": "r02_inv_108.xlsx", "statInfId": "000040187037", "kind": "inverse", "level": "108", "year": "2020",
+      "title": "令和2年 逆行列係数表 [I-(I-M)A]^-1 108部門（検証用）"
+    }
+  ]
+}

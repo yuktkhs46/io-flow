@@ -1,0 +1,210 @@
+<header class="masthead">
+  <div class="wrap">
+    <div class="title-row">
+      <h1>産業連関フロー<small id="h1-sub">令和2年（2020年）産業連関表</small></h1>
+      <span class="unit-note">取引基本表（生産者価格評価・名目）／ 出典：総務省ほか「産業連関表」（e-Stat）</span>
+    </div>
+    <div class="controls">
+      <div><span class="ctl-label">部門分類</span>
+        <span class="seg" id="level-seg" role="group" aria-label="部門分類">
+          <button type="button" data-level="13">13部門</button>
+          <button type="button" data-level="37">37部門</button>
+          <button type="button" data-level="108">108部門</button>
+        </span>
+      </div>
+      <div id="year-ctl"><span class="ctl-label">年</span>
+        <span class="seg" id="year-seg" role="group" aria-label="年"></span>
+      </div>
+      <span class="note" id="basis-note"></span>
+    </div>
+    <nav class="tabs" aria-label="画面">
+      <a href="#flow">全体フロー</a>
+      <a href="#sector">産業別フロー</a>
+      <a href="#matrix">取引マトリクス</a>
+      <a href="#ripple">波及効果</a>
+      <a href="#position">影響力・感応度</a>
+      <a href="#compare">経年比較</a>
+    </nav>
+  </div>
+</header>
+
+<main><div class="wrap">
+
+  <!-- 全体フロー -->
+  <section class="view" id="v-flow">
+    <div class="view-head">
+      <h2>日本経済のお金の流れ</h2>
+      <p>各産業が「どこから買い（費用）」「どこへ売ったか（販路）」を一枚にまとめたサンキー図です。中央の帯は総供給（国内生産額＋輸入）で、左右の合計は一致します。</p>
+    </div>
+    <div class="tiles" id="flow-tiles"></div>
+    <div class="panel">
+      <div class="toolbar">
+        <div><span class="ctl-label">まとめ方</span>
+          <span class="seg" id="flow-gran" role="group" aria-label="まとめ方">
+            <button type="button" data-gran="group">産業グループ（8）</button>
+            <button type="button" data-gran="sector">表の部門</button>
+          </span>
+        </div>
+        <div class="legend" id="flow-legend"></div>
+      </div>
+      <div class="scroll-x"><svg id="flow-svg" role="img" aria-label="費用構成・産業・販路のサンキー図"></svg></div>
+      <p class="note" id="flow-note"></p>
+    </div>
+  </section>
+
+  <!-- 産業別フロー -->
+  <section class="view" id="v-sector" hidden>
+    <div class="view-head">
+      <h2 id="sector-title">産業別フロー</h2>
+      <p>選んだ産業の費用構成（左）と販路（右）。左は原材料・サービスの購入先と付加価値の内訳、右は他産業への販売と最終需要です。</p>
+    </div>
+    <div class="toolbar">
+      <label for="sector-select" class="ctl-label">産業</label>
+      <select id="sector-select"></select>
+    </div>
+    <div class="kpis" id="sector-kpis"></div>
+    <div class="panel">
+      <div class="scroll-x"><svg id="sector-svg" role="img" aria-label="選択産業の投入と販路のサンキー図"></svg></div>
+    </div>
+    <div class="two-col">
+      <div class="panel"><h3>主な購入先（投入係数の大きい順）</h3><div class="scroll-x" id="sector-in"></div></div>
+      <div class="panel"><h3>主な販売先（販売額の大きい順）</h3><div class="scroll-x" id="sector-out"></div></div>
+    </div>
+  </section>
+
+  <!-- マトリクス -->
+  <section class="view" id="v-matrix" hidden>
+    <div class="view-head">
+      <h2>取引マトリクス</h2>
+      <p>行が売り手（販売元）、列が買い手（購入先）です。色が濃いほど取引が大きいことを示します（対数目盛）。行・列の部門名をクリックすると産業別フローへ移ります。</p>
+    </div>
+    <div class="panel">
+      <div class="toolbar">
+        <div><span class="ctl-label">指標</span>
+          <span class="seg" id="matrix-metric" role="group" aria-label="指標">
+            <button type="button" data-metric="Z">取引額</button>
+            <button type="button" data-metric="A">投入係数</button>
+            <button type="button" data-metric="B">逆行列係数</button>
+          </span>
+        </div>
+        <div id="matrix-legend"></div>
+      </div>
+      <div class="scroll-x"><svg id="matrix-svg" role="img" aria-label="産業間取引のヒートマップ"></svg></div>
+      <p class="note" id="matrix-note"></p>
+    </div>
+  </section>
+
+  <!-- 波及効果 -->
+  <section class="view" id="v-ripple" hidden>
+    <div class="view-head">
+      <h2>経済波及効果シミュレーション</h2>
+      <p>ある産業の製品への需要が増えたとき、取引の連鎖を通じて各産業の生産がどれだけ誘発されるかを、逆行列係数 [I−(I−M̂)A]⁻¹ で計算します。</p>
+    </div>
+    <div class="panel toolbar">
+      <div><label for="ripple-sector" class="ctl-label">需要が増える産業</label> <select id="ripple-sector"></select></div>
+      <div><label for="ripple-amount" class="ctl-label">需要増加額（億円）</label> <input type="number" id="ripple-amount" min="1" step="100" value="1000"></div>
+      <div><span class="ctl-label">需要の種類</span>
+        <span class="seg" id="ripple-kind" role="group" aria-label="需要の種類">
+          <button type="button" data-kind="dom">国内需要</button>
+          <button type="button" data-kind="exp">輸出</button>
+        </span>
+      </div>
+    </div>
+    <div class="tiles" id="ripple-tiles"></div>
+    <div class="panel">
+      <h3>産業別の生産誘発額（上位15産業）</h3>
+      <div class="legend" id="ripple-legend"></div>
+      <div class="scroll-x"><svg id="ripple-svg" role="img" aria-label="産業別生産誘発額の横棒グラフ"></svg></div>
+      <details><summary class="note">全産業の数値を表で見る</summary><div class="scroll-x" id="ripple-table"></div></details>
+      <p class="note">国内需要の場合は、需要増のうち輸入品で賄われる分（輸入係数 M）を差し引いた額が国内生産への直接効果になります。雇用者所得・粗付加価値の誘発額は、誘発された生産額に各産業の雇用者所得率・粗付加価値率を掛けて求めています（第1次間接効果まで）。</p>
+    </div>
+  </section>
+
+  <!-- 影響力・感応度 -->
+  <section class="view" id="v-position" hidden>
+    <div class="view-head">
+      <h2>影響力係数と感応度係数</h2>
+      <p>影響力係数（横軸）は、その産業の需要増が経済全体に与える波及の大きさ。感応度係数（縦軸）は、経済全体の需要増からその産業が受ける影響の大きさ。どちらも全産業平均が1.0です。円の大きさは国内生産額。</p>
+    </div>
+    <div class="panel">
+      <div class="toolbar">
+        <label for="pos-group" class="ctl-label">強調するグループ</label>
+        <select id="pos-group"></select>
+      </div>
+      <div class="scroll-x"><svg id="pos-svg" role="img" aria-label="影響力係数と感応度係数の散布図"></svg></div>
+    </div>
+  </section>
+
+  <!-- 経年比較 -->
+  <section class="view" id="v-compare" hidden>
+    <div class="view-head">
+      <h2>経年比較</h2>
+      <p>2005・2011・2015・2020年の産業連関表を、同じ部門分類で並べて比較します。金額はすべて名目値（その年の価格）です。</p>
+    </div>
+    <div class="panel" id="cmp-unavailable" hidden>
+      <p>108部門は2020年表にしかないため、経年比較は13部門・37部門で行えます。</p>
+      <p><button type="button" class="linkish" id="cmp-to37">37部門に切り替える</button></p>
+    </div>
+    <div id="cmp-body" class="view">
+      <div class="panel toolbar">
+        <div><label for="cmp-a" class="ctl-label">比較元</label> <select id="cmp-a"></select></div>
+        <span aria-hidden="true">→</span>
+        <div><label for="cmp-b" class="ctl-label">比較先</label> <select id="cmp-b"></select></div>
+      </div>
+      <p class="gap-note" id="cmp-gap" hidden><b>2015年と2020年は基準の異なる表です。</b>2005〜2015年は「平成17－23－27年接続産業連関表」で、部門の定義を2015年表にそろえてあります。2020年は「令和2年産業連関表」そのもので、部門の定義や推計方法が一部変わっています。このため2015年→2020年の変化には、経済の変化に加えて表の作り方の違いによる差も含まれます（グラフでは破線で示しています）。2020年は新型コロナウイルス感染症の影響を受けた年でもあります。</p>
+      <div class="tiles" id="cmp-tiles"></div>
+      <div class="panel">
+        <div class="toolbar">
+          <div><span class="ctl-label">指標</span>
+            <span class="seg" id="cmp-metric" role="group" aria-label="比較する指標">
+              <button type="button" data-cm="X">国内生産額</button>
+              <button type="button" data-cm="VA">粗付加価値</button>
+              <button type="button" data-cm="EX">輸出</button>
+              <button type="button" data-cm="IM">輸入</button>
+              <button type="button" data-cm="VR">付加価値率</button>
+              <button type="button" data-cm="MR">輸入係数</button>
+              <button type="button" data-cm="IF">影響力係数</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 id="cmp-trend-title">産業グループ別の推移</h3>
+        <div class="scroll-x"><svg id="cmp-trend" role="img" aria-label="産業グループ別の推移の折れ線グラフ"></svg></div>
+      </div>
+      <div class="panel">
+        <h3 id="cmp-bars-title">産業別の増減</h3>
+        <div class="legend"><span><i style="background:var(--div-pos)"></i>増加</span><span><i style="background:var(--div-neg)"></i>減少</span></div>
+        <div class="scroll-x"><svg id="cmp-bars" role="img" aria-label="産業別の増減の横棒グラフ"></svg></div>
+      </div>
+      <div class="panel">
+        <h3>選んだ産業の推移</h3>
+        <div class="toolbar"><label for="cmp-sector" class="ctl-label">産業</label><select id="cmp-sector"></select></div>
+        <div class="small-multiples" id="cmp-small"></div>
+      </div>
+      <div class="panel">
+        <h3>取引構造の変化</h3>
+        <div class="toolbar">
+          <div><span class="ctl-label">指標</span>
+            <span class="seg" id="cmp-matrix" role="group" aria-label="取引構造の指標">
+              <button type="button" data-cx="A">投入係数の差</button>
+              <button type="button" data-cx="Z">取引額の差</button>
+            </span>
+          </div>
+          <div id="cmp-matrix-legend"></div>
+        </div>
+        <div class="scroll-x"><svg id="cmp-matrix-svg" role="img" aria-label="取引構造の変化のヒートマップ"></svg></div>
+        <p class="note" id="cmp-matrix-note"></p>
+      </div>
+    </div>
+  </section>
+
+</div></main>
+
+<footer><div class="wrap">
+  <div>出典：総務省ほか10府省庁「令和2年（2020年）産業連関表」取引基本表（生産者価格評価表）13部門・37部門・108部門、同「平成17－23－27年接続産業連関表」生産者価格評価表（名目）13部門・37部門（<a href="https://www.e-stat.go.jp/stat-search/files?toukei=00200603" target="_blank" rel="noopener">e-Stat</a>）をもとに加工して作成。単位は表示に合わせて兆円・億円に換算。</div>
+  <div>本ページの数値は、公表された産業連関表を加工・集計したものであり、公式統計そのものではありません。波及効果などの推計値は一定の前提に基づく試算です。内容の正確性には注意を払っていますが、本ページの利用によって生じたいかなる損害についても責任を負いかねます。正式な数値は e-Stat の公表資料をご確認ください。</div>
+  <div>逆行列係数は競争輸入型 [I−(I−M̂)A]⁻¹ をブラウザ上で計算（輸入係数 M = 輸入 ÷ 国内需要）。公式の逆行列係数表との差は最大 5×10⁻⁴ 程度で、取引表の 0.1（1億円）単位の丸めによるものです。</div>
+</div></footer>
+
+<div id="tip" hidden></div>
